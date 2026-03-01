@@ -2,11 +2,13 @@ package com.bridgelabz;
 
 import java.sql.*;
 import java.util.Enumeration;
+import io.github.cdimascio.dotenv.Dotenv;
 
 public class PayrollDBConnection {
+    private static final Dotenv dotenv = Dotenv.load();
     private static final String URL = "jdbc:mysql://localhost:3306/payroll_service";
     private static final String USER = "root";
-    private static final String PASSWORD = "Maikyubatau@04";
+    private static final String PASSWORD = dotenv.get("DB_PASSWORD");
 
     public static void main(String[] args) {
         try {
