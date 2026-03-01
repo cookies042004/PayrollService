@@ -73,4 +73,38 @@ public class PayrollDBService {
             throw new PayrollException("Error updating salary using PreparedStatement", e);
         }
     }
+
+    public List<EmployeePayrollData> getEmployeesByDateRange(
+            java.time.LocalDate start,
+            java.time.LocalDate end) {
+
+        List<EmployeePayrollData> list = new ArrayList<>();
+
+        String query =
+                "SELECT * FROM employee_payroll WHERE start_date BETWEEN ? AND ?";
+
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement pstmt = connection.prepareStatement(query)) {
+
+            pstmt.setDate(1, Date.valueOf(start));
+            pstmt.setDate(2, Date.valueOf(end));
+
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                list.add(new EmployeePayrollData(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getDouble("salary"),
+                        rs.getDate("start_date").toLocalDate(),
+                        rs.getString("gender")
+                ));
+            }
+
+        } catch (SQLException e) {
+            throw new PayrollException("Error retrieving by date range", e);
+        }
+
+        return list;
+    }
 }
