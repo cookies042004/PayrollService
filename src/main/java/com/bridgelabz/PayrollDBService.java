@@ -55,4 +55,22 @@ public class PayrollDBService {
             throw new PayrollException("Error updating salary", e);
         }
     }
+
+    // update using preparedStatement
+    public int updateSalaryUsingPreparedStatement(String name, double salary) {
+
+        String query = "UPDATE employee_payroll SET salary = ? WHERE name = ?";
+
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement pstmt = connection.prepareStatement(query)) {
+
+            pstmt.setDouble(1, salary);
+            pstmt.setString(2, name);
+
+            return pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new PayrollException("Error updating salary using PreparedStatement", e);
+        }
+    }
 }
